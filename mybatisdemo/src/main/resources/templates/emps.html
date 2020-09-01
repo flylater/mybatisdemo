@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+    <link href="/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <!--搭建显示页面-->
+    <div class="container">
+        <!--标题行-->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>员工列表</h1>
+            </div>
+        </div>
+
+        <!--按钮行-->
+        <div class="row">
+            <div class="col-md-2 col-md-offset-10">
+                <button class="btn btn-primary btn-sm">新增</button>
+                <button class="btn btn-danger btn-sm">删除</button>
+            </div>
+        </div>
+        <!--显示表格数据-->
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>序号</th>
+                        <th>员工姓名</th>
+                        <th>性别</th>
+                        <th>邮箱</th>
+                        <th>部门</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr th:each="employee:${pageInfo.list}">
+                        <td th:text="${employee.empId}">1</td>
+                        <td th:text="${employee.empName}">张三</td>
+                        <td th:text="${employee.gender}=='M'?'男':'女'">女</td>
+                        <td th:text="${employee.email}">zhangsan@163.com</td>
+                        <td th:text="${employee.department.deptName}">1</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                编辑
+                            </button>
+                            <button class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                删除
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!--显示分页信息-->
+        <div class="row">
+            <!--分页文字信息-->
+            <div class="col-md-6" th:text="'当前第'+${pageInfo.pageNum}+'页,总'+${pageInfo.pages}+'页,总'+${pageInfo.total}+'条记录'">
+                当前${pageInfo.pageNum}页,总${pageInfo.pages}页,总${pageInfo.total}条记录
+            </div>
+            <!--分页条信息-->
+            <div class="col-md-6">
+                <nav aria-label="Page navigation">
+                    <nav style="text-align: right">
+                        <ul class="pagination">
+                            <li><a th:href="@{/emps(pn=1)}">首页</a> </li>
+                            <!--前一页-->
+                            <!--如果没有前一页则禁用-->
+                            <li th:class="${!pageInfo.hasPreviousPage} ?'disabled'">
+                                <a th:href="${pageInfo.hasPreviousPage} ? @{/emps(pn=${pageInfo.pageNum-1})} : '#'" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+
+                            <!--导航页号-->
+                            <!--如果页码等于当前页码显示成激活状态-->
+                            <li th:each="pageNum:${pageInfo.navigatepageNums}" th:class="${pageNum}==${pageInfo.pageNum}?'active'">
+<!--                                <a th:href="'/emps?pn='+${pageNum}" th:text="${pageNum}" >1</a>-->
+                                <a th:href="@{/emps(pn=${pageNum})}" th:text="${pageNum}" >1</a>
+                            </li>
+
+                            <!--后一页-->
+                            <!--如果没有后一页则禁用-->
+                            <li th:class="${!pageInfo.hasNextPage}?'disabled'">
+                                <a th:href="${pageInfo.hasNextPage} ? @{/emps(pn=${pageInfo.pageNum+1})} : '#'" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+
+                            <li><a th:href="@{/emps(pn=${pageInfo.pages})}">尾页</a> </li>
+                        </ul>
+                    </nav>
+                </nav>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
