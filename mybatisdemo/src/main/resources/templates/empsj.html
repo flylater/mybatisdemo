@@ -10,6 +10,9 @@
         var totalRecord, currentPage;
 
         $(function () {
+            // 获取所有的部门并展示
+            getDept("#dId");
+
             // 打开首页
             to_page(1);
         });
@@ -17,9 +20,10 @@
         // 跳转到指定页面
         function to_page(pn) {
             $.ajax({
-                url: "/empsjson",
-                data: "pn=" + pn,
+                url: "/empsjson?pn=" + pn,
+                data: $("#query").serialize(),
                 type: "GET",
+                async: false,
                 success: function (result) {
                     console.log(result);
                     // 1. 解析并显示分页信息
@@ -33,6 +37,11 @@
             });
 
         }
+
+        // 点击查询按钮
+        $(document).on("click", "#query-btn", function () {
+            to_page(1);
+        });
 
         // 解析并显示分页信息
         function build_emps_table(result) {
@@ -196,7 +205,28 @@
                 success: function (result) {
                     console.log(result);
                     $.each(result.extend.depts, function (index, item) {
-                        var option = $("<option></option>").append(this.deptName).attr("value", this.deptId).appendTo(ele)
+                        var option = $("<option></option>").append(this.deptName).attr("value", this.deptId);
+                        option.appendTo(ele);
+                    });
+                }
+            });
+        }
+
+        // 查询页面：查出所有的部门信息并显示在下拉表中
+        function getDept(ele) {
+            // 清空之前下拉列表的值
+            $(ele).empty();
+            // 发送ajax请求获取部门信息并显示
+            $.ajax({
+                url: "/depts",
+                type: "GET",
+                async: false,
+                success: function (result) {
+                    $("<option></option>").append("全部").attr("value", "0").appendTo(ele);
+
+                    $.each(result.extend.depts, function (index, item) {
+                        var option = $("<option></option>").append(this.deptName).attr("value", this.deptId);
+                        option.appendTo(ele);
                     });
                 }
             });
@@ -412,8 +442,34 @@
             </div>
         </div>
 
+        <!--空白行-->
+        <div class="row">
+            <br/>
+        </div>
+
         <!--按钮行-->
         <div class="row">
+            <div class="col-md-offset-1">
+                <form class="form-inline" id="query">
+                    <div class="form-group">
+                        <label for="empName">姓名</label>
+                        <input type="text" class="form-control" id="empName" name="empName">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">性别</label>
+                        <input type="text" class="form-control" name="gender">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">部门</label>
+                        <select class="form-control" name="dId" id="dId"></select>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="query-btn">查询</button>
+                </form>
+            </div>
             <div class="col-md-2 col-md-offset-10">
                 <button class="btn btn-primary btn-sm" id="emp_add_modal_btn">新增</button>
                 <button class="btn btn-danger btn-sm">删除</button>

@@ -43,12 +43,13 @@ public class EmployeeController {
 
     @ResponseBody
     @RequestMapping("/empsjson")
-    public Msg getEmpsWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn) {
+    public Msg getEmpsWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn, Employee employee) {
         // 引入 PageHelper 分页插件
         // 在查询之前只需要调用，传入页码，以及每页的大小
         PageHelper.startPage(pn, 5);
 
-        List<Employee> emps = employeeService.getAll();
+        logger.info("接收的employee为：" + employee);
+        List<Employee> emps = employeeService.getAll(employee);
 
         // 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了
         // 封装了详细的分页信息，包括查询出来的数据，传入连续显示的页数

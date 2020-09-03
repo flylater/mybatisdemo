@@ -19,8 +19,38 @@ public class EmployeeService {
     @Autowired
     EmployeeMapper employeeMapper;
 
+    /**
+     * 查询员工
+     * @return
+     */
     public List<Employee> getAll() {
         return employeeMapper.selectByExampleWithDept(null);
+    }
+
+    /**
+     * 根据条件查询员工
+     * @return
+     */
+    public List<Employee> getAll(Employee employee) {
+        EmployeeExample example = new EmployeeExample();
+        EmployeeExample.Criteria criteria = example.createCriteria();
+        if (employee.getEmpName() != null && !employee.getEmpName().equals("")) {
+            criteria.andEmpNameEqualTo(employee.getEmpName());
+        }
+        if (employee.getGender().equals("男")) {
+            employee.setGender("M");
+            criteria.andGenderEqualTo(employee.getGender());
+        } else if (employee.getGender().equals("女")) {
+            employee.setGender("F");
+            criteria.andGenderEqualTo(employee.getGender());
+        }
+        if (employee.getEmail() != null && !employee.getEmail().equals("")) {
+            criteria.andEmailEqualTo(employee.getEmail());
+        }
+        if (employee.getdId() != null && employee.getdId() != 0) {
+            criteria.andDIdEqualTo(employee.getdId());
+        }
+        return employeeMapper.selectByExampleWithDept(example);
     }
 
     /**
