@@ -4,6 +4,7 @@ import com.rszhang.mybatisdemo.bean.Employee;
 import com.rszhang.mybatisdemo.bean.EmployeeExample;
 import com.rszhang.mybatisdemo.dao.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * @date : 2020/8/3
  */
 @Service
+//@CacheConfig(cacheNames = {"EmployeeService"})
 public class EmployeeService {
 
     @Autowired
@@ -23,6 +25,7 @@ public class EmployeeService {
      * 查询员工
      * @return
      */
+    @Cacheable
     public List<Employee> getAll() {
         return employeeMapper.selectByExampleWithDept(null);
     }
@@ -31,6 +34,7 @@ public class EmployeeService {
      * 根据条件查询员工
      * @return
      */
+    @Cacheable(value = "query", key = "args[0].hashCode()")
     public List<Employee> getAll(Employee employee) {
         EmployeeExample example = new EmployeeExample();
         EmployeeExample.Criteria criteria = example.createCriteria();

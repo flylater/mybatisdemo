@@ -3,8 +3,11 @@ package com.rszhang.mybatisdemo.bean;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
+import java.util.Objects;
 
-public class Employee {
+
+public class Employee implements Serializable {
     private Integer empId;
 
     @Pattern(regexp = "(^[a-zA-Z0-9_-]{6,16}$)|(^[\\u2E80-\\u9FFF]{2,5})",
@@ -91,5 +94,23 @@ public class Employee {
                 ", dId=" + dId +
                 ", department=" + department +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(empId, employee.empId) &&
+                Objects.equals(empName, employee.empName) &&
+                Objects.equals(gender, employee.gender) &&
+                Objects.equals(email, employee.email) &&
+                Objects.equals(dId, employee.dId) &&
+                Objects.equals(department, employee.department);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(empId, empName, gender, email, dId, department);
     }
 }

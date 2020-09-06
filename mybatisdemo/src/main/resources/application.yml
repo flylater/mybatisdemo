@@ -13,6 +13,10 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:ehcache.xml
 
 
 logging:
