@@ -1,5 +1,7 @@
 package com.rszhang.mybatisdemo.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.rszhang.mybatisdemo.bean.Employee;
 import com.rszhang.mybatisdemo.bean.EmployeeExample;
 import com.rszhang.mybatisdemo.dao.EmployeeMapper;
@@ -30,12 +32,40 @@ public class EmployeeService {
         return employeeMapper.selectByExampleWithDept(null);
     }
 
+//    /**
+//     * 根据条件查询员工
+//     * @return
+//     */
+////    @Cacheable(value = "query", key = "args[0].hashCode()")
+////    @Cacheable(value = "query", key = "#employee.empName+#employee.gender+#employee.email+#employee.dId+")
+//    public List<Employee> getAll(Employee employee) {
+//        EmployeeExample example = new EmployeeExample();
+//        EmployeeExample.Criteria criteria = example.createCriteria();
+//        if (employee.getEmpName() != null && !employee.getEmpName().equals("")) {
+//            criteria.andEmpNameEqualTo(employee.getEmpName());
+//        }
+//        if (employee.getGender().equals("男")) {
+//            employee.setGender("M");
+//            criteria.andGenderEqualTo(employee.getGender());
+//        } else if (employee.getGender().equals("女")) {
+//            employee.setGender("F");
+//            criteria.andGenderEqualTo(employee.getGender());
+//        }
+//        if (employee.getEmail() != null && !employee.getEmail().equals("")) {
+//            criteria.andEmailEqualTo(employee.getEmail());
+//        }
+//        if (employee.getdId() != null && employee.getdId() != 0) {
+//            criteria.andDIdEqualTo(employee.getdId());
+//        }
+//        return employeeMapper.selectByExampleWithDept(example);
+//    }
+
     /**
      * 根据条件查询员工
      * @return
      */
-    @Cacheable(value = "query", key = "args[0].hashCode()")
-    public List<Employee> getAll(Employee employee) {
+    @Cacheable(value = "query", key = "#pn+args[1].hashCode()")
+    public PageInfo getAll(Integer pn, Employee employee) {
         EmployeeExample example = new EmployeeExample();
         EmployeeExample.Criteria criteria = example.createCriteria();
         if (employee.getEmpName() != null && !employee.getEmpName().equals("")) {
@@ -54,7 +84,13 @@ public class EmployeeService {
         if (employee.getdId() != null && employee.getdId() != 0) {
             criteria.andDIdEqualTo(employee.getdId());
         }
-        return employeeMapper.selectByExampleWithDept(example);
+
+        PageHelper.startPage(pn, 5);
+        List<Employee> employees = employeeMapper.selectByExampleWithDept(example);
+
+        PageInfo page = new PageInfo(employees, 5);
+
+        return page;
     }
 
     /**
