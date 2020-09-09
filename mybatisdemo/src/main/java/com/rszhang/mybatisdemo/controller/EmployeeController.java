@@ -15,6 +15,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,30 +38,53 @@ public class EmployeeController {
 
         // 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了
         // 封装了详细的分页信息，包括查询出来的数据，传入连续显示的页数
-        PageInfo page = new PageInfo(emps,5);
+        PageInfo page = new PageInfo(emps, 5);
         model.addAttribute("pageInfo", page);
         return "emps.html";
     }
 
+//    @ResponseBody
+//    @RequestMapping("/empsjson")
+//    public Msg getEmpsWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn, Employee employee) {
+//        // 引入 PageHelper 分页插件
+//        // 在查询之前只需要调用，传入页码，以及每页的大小
+//        PageHelper.startPage(pn, 5);
+//
+//        logger.info("接收的employee为：" + employee);
+//
+//        Instant start = Instant.now();
+//        List<Employee> emps = employeeService.getAll(employee);
+//        Instant end = Instant.now();
+//
+//        Duration duration = Duration.between(start, end);
+//        logger.info("此次查询花费了：" + duration.toMillis() + "毫秒");
+//
+//        // 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了
+//        // 封装了详细的分页信息，包括查询出来的数据，传入连续显示的页数
+//        PageInfo page = new PageInfo(emps, 5);
+//
+//        return Msg.success().add("pageInfo", page);
+//    }
+
     @ResponseBody
     @RequestMapping("/empsjson")
     public Msg getEmpsWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn, Employee employee) {
-        // 引入 PageHelper 分页插件
-        // 在查询之前只需要调用，传入页码，以及每页的大小
-        PageHelper.startPage(pn, 5);
-
+        logger.info("请求的页码为： " + pn);
         logger.info("接收的employee为：" + employee);
-        List<Employee> emps = employeeService.getAll(employee);
 
-        // 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了
-        // 封装了详细的分页信息，包括查询出来的数据，传入连续显示的页数
-        PageInfo page = new PageInfo(emps,5);
+        Instant start = Instant.now();
+        PageInfo pageInfo = employeeService.getAll(pn, employee);
+        Instant end = Instant.now();
 
-        return Msg.success().add("pageInfo", page);
+        Duration duration = Duration.between(start, end);
+        logger.info("此次查询花费了：" + duration.toMillis() + "毫秒");
+
+        return Msg.success().add("pageInfo", pageInfo);
     }
 
     /**
      * 保存新增员工信息
+     *
      * @return
      */
     @ResponseBody
@@ -82,6 +107,7 @@ public class EmployeeController {
 
     /**
      * 更新员工信息
+     *
      * @param employee
      * @return
      */
@@ -95,6 +121,7 @@ public class EmployeeController {
 
     /**
      * 检查姓名是否可用
+     *
      * @param empName
      * @return
      */
@@ -118,6 +145,7 @@ public class EmployeeController {
 
     /**
      * 根据id查询员工信息
+     *
      * @param id
      * @return
      */
