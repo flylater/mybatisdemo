@@ -45,4 +45,5 @@ public class Department implements Serializable {
                 ", deptName='" + deptName + '\'' +
                 '}';
     }
+
 }
