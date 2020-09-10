@@ -10,11 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.UUID;
 
-/**
- * @author : Flylater
- * @version : 1.0
- * @date : 2020/8/2
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class EmployeeMapperTest {

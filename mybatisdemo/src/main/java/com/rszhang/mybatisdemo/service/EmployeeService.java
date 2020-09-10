@@ -11,13 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * @author : Flylater
- * @version : 1.0
- * @date : 2020/8/3
- */
 @Service
-//@CacheConfig(cacheNames = {"EmployeeService"})
 public class EmployeeService {
 
     @Autowired
@@ -64,7 +58,7 @@ public class EmployeeService {
      * 根据条件查询员工
      * @return
      */
-    @Cacheable(value = "query", key = "#pn+args[1].hashCode()")
+    @Cacheable(value = "query", key = "args[0] + '&' + args[1]")
     public PageInfo getAll(Integer pn, Employee employee) {
         EmployeeExample example = new EmployeeExample();
         EmployeeExample.Criteria criteria = example.createCriteria();

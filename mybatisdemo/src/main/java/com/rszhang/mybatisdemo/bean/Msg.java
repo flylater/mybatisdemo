@@ -5,9 +5,6 @@ import java.util.Map;
 
 /**
  * 通用的返回类
- * @author : Flylater
- * @version : 1.0
- * @date : 2020/8/16
  */
 public class Msg {
     // 状态码

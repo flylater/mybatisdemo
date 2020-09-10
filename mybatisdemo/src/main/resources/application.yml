@@ -1,7 +1,106 @@
+spring:
+  profiles:
+    active: home
+
+---
 server:
   port: 8081
 
 spring:
+  profiles: wireless
+  datasource:
+    url: jdbc:mysql://172.26.245.152:3307/mybatis?allowMultiQueries=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  thymeleaf:
+    cache: false
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:ehcache.xml
+
+#  redis:
+#    host: 172.26.245.152
+#    port: 6379
+#    jedis:
+#      pool:
+#        max-idle: 20
+#        min-idle: 1
+#        max-active: 20
+#        max-wait: 60000
+#    database: 0
+
+
+logging:
+  level:
+    com:
+      rszhang:
+        mybatisdemo:
+          controller: info
+          dao: debug
+#  file:
+#    path: "./logs"
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+#    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
+
+
+---
+server:
+  port: 8081
+
+spring:
+  profiles: home-wired
+  datasource:
+    url: jdbc:mysql://192.168.100.11:3307/mybatis?allowMultiQueries=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  thymeleaf:
+    cache: false
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:ehcache.xml
+
+
+logging:
+  level:
+    com:
+      rszhang:
+        mybatisdemo:
+          controller: info
+          dao: debug
+#  file:
+#    path: "./logs"
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+#    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
+
+
+---
+server:
+  port: 8081
+
+spring:
+  profiles: home
   datasource:
     url: jdbc:mysql://127.0.0.1:3307/mybatis?allowMultiQueries=true
     username: root
@@ -14,6 +113,20 @@ spring:
       filter:
         enabled: true
 
+  cache:
+    type: redis
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    jedis:
+      pool:
+        max-active: 20  # 最大连接数（使用负值表示没有限制）
+        max-wait: 1000  # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 8  # 连接池中的最大空闲连接
+        min-idle: 1  # 连接池中的最小空闲连接
+    timeout: 2000  # 连接超时时间（毫秒）
+    database: 0
 
 logging:
   level:
@@ -22,7 +135,21 @@ logging:
         mybatisdemo:
           controller: info
           dao: debug
+#  file:
+#    path: "./logs"
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+#    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
 
 mybatis:
   config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:mapper/*.xml
+
+
+
+
+
+
+
+
+
