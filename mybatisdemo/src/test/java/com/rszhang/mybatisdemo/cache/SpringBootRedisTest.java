@@ -42,7 +42,7 @@ public class SpringBootRedisTest {
     @Test
     public void test02() {
         // Employee 必须要序列化
-        Employee employee = employeeMapper.selectByPrimaryKey(1012);
+        Employee employee = employeeMapper.selectByPrimaryKey(2);
         redisTemplate.opsForValue().set("emp-01", employee);
 
         // 使用json序列化
